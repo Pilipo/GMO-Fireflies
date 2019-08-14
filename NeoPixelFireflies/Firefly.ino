@@ -8,7 +8,9 @@ Firefly::Firefly () {
 }
 
 void Firefly::ignite() {
+  // Original hue randomizer
 //  _hue = hueCenter + (random(101)-50)*0.01*hueRange;
+// yellow/green hue
   _hue = 0.22;
   _fadeSpeed = baseSpeed*(random(100)*0.01 + 0.5);
   _isGlowing = true;
