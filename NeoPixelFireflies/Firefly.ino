@@ -5,6 +5,7 @@ Firefly::Firefly () {
   _brightness = 0.0;
   _fadeSpeed = 0.0;
   _isGlowing = false;
+  _isFull = false;
 }
 
 void Firefly::ignite() {
@@ -14,6 +15,14 @@ void Firefly::ignite() {
   _hue = 0.22;
   _fadeSpeed = baseSpeed*(random(100)*0.01 + 0.5);
   _isGlowing = true;
+  _isFull = false;
+}
+
+void Firefly::full() {
+  _hue = 0;
+  _fadeSpeed = baseSpeed*(random(100)*0.01 + 0.5);
+  _isGlowing = true;
+  _isFull = true;
 }
 
 boolean Firefly::isGlowing() {
@@ -34,10 +43,14 @@ void Firefly::animate() {
     _brightness = 0.0;
     _fadeSpeed = 0.0;
     _isGlowing = false;
+    _isFull = false;
   }
 }
 
 uint32_t Firefly::getColor() {
+  if (_isFull == true) {
+    return Adafruit_DotStar::Color(255*_brightness, 255*_brightness, 255*_brightness);
+  }
   uint8_t w = 255*_hue;
   if(w < 85) {
     return Adafruit_DotStar::Color(w*3*_brightness, (255-w*3)*_brightness, 0);
