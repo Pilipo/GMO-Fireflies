@@ -2,8 +2,8 @@
 #include <Adafruit_DotStar.h>
 
 #define PIN 6
-#define NUM_PIXELS 1
-#define MAX_GLOWING_PIXELS 1
+#define NUM_PIXELS 3
+#define MAX_GLOWING_PIXELS 2
 
 class Firefly {
   private:
@@ -27,7 +27,7 @@ class Firefly {
 
 #define DATAPIN    7
 #define CLOCKPIN   8
-Adafruit_DotStar strip(NUM_PIXELS, DATAPIN, CLOCKPIN, DOTSTAR_BRG);
+Adafruit_DotStar strip(NUM_PIXELS, DATAPIN, CLOCKPIN, DOTSTAR_GBR); //DOTSTAR_BRG can be changed to RGB or 
 
 Firefly ff[NUM_PIXELS];
 
