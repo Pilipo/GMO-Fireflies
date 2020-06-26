@@ -1,8 +1,10 @@
 #include <SPI.h>
 #include <Adafruit_DotStar.h>
 
-#define NUM_PIXELS 3
-#define MAX_GLOWING_PIXELS 2
+// Update this to represent total number of pixels.
+#define NUM_PIXELS 1
+// Update this to represent total of pixels that can light simultaneously.
+#define MAX_GLOWING_PIXELS 1
 
 class Firefly {
   private:
@@ -11,19 +13,19 @@ class Firefly {
     float _hue;
     boolean _isGlowing;
     boolean _isFull;
-    
+
   public:
     Firefly ();
-	
+
     float hueCenter;
     float hueRange;
     float baseSpeed;
-    boolean isGlowing();    
+    boolean isGlowing();
     uint32_t getColor();
-    
+
     void ignite();
     void full();
-    void animate();  
+    void animate();
 };
 
 int off = 0;
@@ -35,8 +37,10 @@ int lastRoutine = off;
 #define DATAPIN    11 //7
 #define CLOCKPIN   13 //8
 #define BUTTONPIN  7
-//Adafruit_DotStar strip(NUM_PIXELS, DATAPIN, CLOCKPIN, DOTSTAR_GBR); //DOTSTAR_BRG can be changed to RGB or whatever..
-Adafruit_DotStar strip(NUM_PIXELS, DOTSTAR_GBR); //DOTSTAR_BRG can be changed to RGB or whatever.. (this line omits the pins because it uses SPI)
+//DOTSTAR_BRG can be changed to RGB or whatever..
+
+//Adafruit_DotStar strip(NUM_PIXELS, DATAPIN, CLOCKPIN, DOTSTAR_GBR);
+Adafruit_DotStar strip(NUM_PIXELS, DOTSTAR_GBR); //(this line omits the pins because it uses SPI)
 
 Firefly ff[NUM_PIXELS];
 
@@ -59,7 +63,7 @@ void setup() {
 
 void loop() {
   int reading = digitalRead(BUTTONPIN);
-  
+
   if (reading != lastButtonState) {
     lastDebounceTime = millis();
   }
@@ -77,15 +81,15 @@ void loop() {
       }
     }
   }
-  
+
   //////////////////////////////////////
-  // System is turned off, 
+  // System is turned off,
   // so fade to 0
   //////////////////////////////////////
-  
+
   if (routine == off) {
     int glowingPixelCount = 0;
-    
+
     for(int i = 0; i < NUM_PIXELS; i++) {
       ff[i].animate();
       strip.setPixelColor(i, ff[i].getColor());
@@ -95,10 +99,10 @@ void loop() {
   }
 
   //////////////////////////////////////
-  // System is turned to firefly, 
+  // System is turned to firefly,
   // so do the things
   //////////////////////////////////////
-  
+
   if (routine == firefly) {
     int glowingPixelCount = 0;
     // do we have enough lit pixels?
@@ -107,7 +111,7 @@ void loop() {
         glowingPixelCount++;
       }
     }
-    
+
     for(int i = 0; i < NUM_PIXELS; i++) {
       if(!ff[i].isGlowing() && glowingPixelCount < MAX_GLOWING_PIXELS && random(100) < 5) {
         ff[i].ignite();
@@ -121,11 +125,11 @@ void loop() {
   }
 
   //////////////////////////////////////
-  // System is turned full bright, 
+  // System is turned full bright,
   // so fade all to 255
   //////////////////////////////////////
 
-  if (routine == full) {    
+  if (routine == full) {
     for(int i = 0; i < NUM_PIXELS; i++) {
       ff[i].full();
       ff[i].animate();
