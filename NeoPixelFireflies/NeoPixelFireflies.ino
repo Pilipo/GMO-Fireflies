@@ -2,7 +2,7 @@
 #include <Adafruit_DotStar.h>
 
 // Update this to represent total number of pixels.
-#define NUM_PIXELS 1
+#define NUM_PIXELS 3
 // Update this to represent total of pixels that can light simultaneously.
 #define MAX_GLOWING_PIXELS 1
 
@@ -44,13 +44,10 @@ Adafruit_DotStar strip(NUM_PIXELS, DOTSTAR_GBR); //(this line omits the pins bec
 
 Firefly ff[NUM_PIXELS];
 
-int buttonState;
-int lastButtonState = LOW;
-unsigned long lastDebounceTime = 0;
-unsigned long debounceDelay = 50;
+
 
 void setup() {
-  Serial.begin(9600);
+//  Serial.begin(9600);
   // I'm not sure if this is doing anything??
   #if defined(__AVR_ATtiny85__) && (F_CPU == 16000000L)
     clock_prescale_set(clock_div_1); // Enable 16 MHz on Trinket
@@ -58,52 +55,9 @@ void setup() {
 
   strip.begin();
   strip.show(); // Initialize all pixels to 'off'
-  pinMode(BUTTONPIN, INPUT);
 }
 
 void loop() {
-  int reading = digitalRead(BUTTONPIN);
-
-  if (reading != lastButtonState) {
-    lastDebounceTime = millis();
-  }
-
-  if ((millis() - lastDebounceTime) > debounceDelay) {
-    if (reading != buttonState) {
-      buttonState = reading;
-      if (buttonState == HIGH) {
-        if (routine < 2) {
-          routine++;
-        } else {
-          routine = 0;
-        }
-        Serial.println(routine);
-      }
-    }
-  }
-
-  //////////////////////////////////////
-  // System is turned off,
-  // so fade to 0
-  //////////////////////////////////////
-
-  if (routine == off) {
-    int glowingPixelCount = 0;
-
-    for(int i = 0; i < NUM_PIXELS; i++) {
-      ff[i].animate();
-      strip.setPixelColor(i, ff[i].getColor());
-    }
-    strip.show();
-    delay(10);
-  }
-
-  //////////////////////////////////////
-  // System is turned to firefly,
-  // so do the things
-  //////////////////////////////////////
-
-  if (routine == firefly) {
     int glowingPixelCount = 0;
     // do we have enough lit pixels?
     for(int i = 0; i < NUM_PIXELS; i++) {
@@ -122,21 +76,4 @@ void loop() {
     }
     strip.show();
     delay(10);
-  }
-
-  //////////////////////////////////////
-  // System is turned full bright,
-  // so fade all to 255
-  //////////////////////////////////////
-
-  if (routine == full) {
-    for(int i = 0; i < NUM_PIXELS; i++) {
-      ff[i].full();
-      ff[i].animate();
-      strip.setPixelColor(i, ff[i].getColor());
-    }
-    strip.show();
-    delay(10);
-  }
-  lastButtonState = reading;
 }
