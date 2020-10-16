@@ -4,7 +4,7 @@
 // Update this to represent total number of pixels.
 #define NUM_PIXELS 3
 // Update this to represent total of pixels that can light simultaneously.
-#define MAX_GLOWING_PIXELS 1
+#define MAX_GLOWING_PIXELS 2
 
 class Firefly {
   private:
@@ -27,12 +27,6 @@ class Firefly {
     void full();
     void animate();
 };
-
-int off = 0;
-int firefly = 1;
-int full = 2;
-int routine;
-int lastRoutine = off;
 
 #define DATAPIN    11 //7
 #define CLOCKPIN   13 //8
